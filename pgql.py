@@ -7,14 +7,11 @@ try:
                                   database = "d7sef34h54mlib")
     cursor = connection.cursor()
 
-    create_table_query = '''CREATE TABLE mobile
-          (ID INT PRIMARY KEY     NOT NULL,
-          MODEL           TEXT    NOT NULL,
-          PRICE         REAL); '''
+    create_table_query = '''SELECT stdid FROM stddata WHERE depid='E09' '''
 
     cursor.execute(create_table_query)
     connection.commit()
-    print("Table created successfully in PostgreSQL ")
+    print(cursor.)
 except (Exception, psycopg2.Error) as error :
     print ("Error while connecting to PostgreSQL", error)
 finally:
