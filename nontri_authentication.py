@@ -1,9 +1,6 @@
 import requests
-import getpass
-def ku_login():
+def ku_login(username, password):
     with requests.Session() as session:
-        username = input("username : ")
-        password = getpass.getpass('password: ')
         payload_login = {
             "form_username" : username,
             "form_password": password,
