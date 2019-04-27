@@ -1,2 +1,0 @@
-INSERT INTO examtbl(date, time, courseid, sec, room, startid, endid, mf, sem, year) VALUES
-('13062562',	'09001100',	'01355112',	1	,'LH 1 - 331',	0,	9999999999, 'm', 2, 2561);
