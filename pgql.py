@@ -7,11 +7,11 @@ try:
                                   database = "d7sef34h54mlib")
     cursor = connection.cursor()
 
-    create_table_query = '''SELECT stdid FROM stddata WHERE depid='E09' '''
+    create_table_query = '''SELECT stdid FROM stddata'''
 
     cursor.execute(create_table_query)
+    print(cursor.fetchall())
     connection.commit()
-    print(cursor.)
 except (Exception, psycopg2.Error) as error :
     print ("Error while connecting to PostgreSQL", error)
 finally:
