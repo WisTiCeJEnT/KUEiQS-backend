@@ -1,3 +1,9 @@
 SELECT room, date, time, course.courseid, coursename FROM stddata, stdenroll, course, examtbl
-WHERE stddata.stdid = stdenroll.stdid AND stdenroll.courseid=course.courseid AND examtbl.courseid=stdenroll.courseid
-AND stddata.stdfname='Thanya'
+WHERE stddata.stdid = stdenroll.stdid 
+AND stdenroll.courseid=course.courseid 
+AND examtbl.courseid=stdenroll.courseid 
+AND examtbl.sec=stdenroll.sec
+
+AND stddata.stdid=6010500117
+AND stddata.stdid BETWEEN examtbl.startid AND examtbl.endid
+AND mf='f'
