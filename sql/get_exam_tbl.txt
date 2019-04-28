@@ -1,0 +1,3 @@
+SELECT room, date, time, course.courseid, coursename FROM stddata, stdenroll, course, examtbl
+WHERE stddata.stdid = stdenroll.stdid AND stdenroll.courseid=course.courseid AND examtbl.courseid=stdenroll.courseid
+AND stddata.stdfname='Thanya'
