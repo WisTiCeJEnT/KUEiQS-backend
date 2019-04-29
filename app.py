@@ -23,7 +23,7 @@ def examTbl():
     return jsonify({"status": "ok"})
 
 @app.route('/getdata', methods=['GET', 'POST'])
-def examTbl():
+def getData():
     data = request.get_json()
     print(data)
     data = ku_eiqs.query_data(data)
