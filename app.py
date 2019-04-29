@@ -22,5 +22,12 @@ def examTbl():
     print(data)
     return jsonify({"status": "ok"})
 
+@app.route('/getdata', methods=['GET', 'POST'])
+def examTbl():
+    data = request.get_json()
+    print(data)
+    data = ku_eiqs.query_data(data)
+    return jsonify(data)
+
 if __name__ == "__main__":
     app.run(debug = True,host="0.0.0.0", port=5000)
