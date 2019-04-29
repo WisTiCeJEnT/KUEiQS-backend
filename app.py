@@ -12,7 +12,7 @@ def root():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     data = request.get_json()
-    print(data)
+    #print(data)
     data = ku_eiqs.nontri_login(data)
     return jsonify(data)
 
