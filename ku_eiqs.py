@@ -61,6 +61,7 @@ def exam_tbl(data):
         "coursename": i[1],
         "sec": str(i[2]),
         "date": dateconverter.dateconverter(i[3]),
+        "caldate": f"{int(i[3][4:8])-543}-{i[3][2:4]}-{i[3][0:2]}",
         "time": f"{i[4][0:2]}:{i[4][2:4]} - {i[4][4:6]}:{i[4][6:8]}",
         "room": i[5]
         }
