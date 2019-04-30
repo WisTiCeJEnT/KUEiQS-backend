@@ -20,7 +20,8 @@ def login():
 def examTbl():
     data = request.get_json()
     print(data)
-    return jsonify({"status": "ok"})
+    tbl = ku_eiqs.exam_tbl(data)
+    return jsonify({"status": "ok", "tbl": tbl})
 
 @app.route('/getdata', methods=['GET', 'POST'])
 def getData():

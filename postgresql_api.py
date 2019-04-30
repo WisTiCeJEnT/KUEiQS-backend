@@ -15,7 +15,7 @@ def get_data(query_string):
     if(connection):
             cursor.execute(query_string)
             data = cursor.fetchall()
-            print(data)
+            #print(data)
             return(data)
 
 """
