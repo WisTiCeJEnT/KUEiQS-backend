@@ -57,7 +57,7 @@ def exam_tbl(data):
     for i in exam:
         ans.append({"courseid": i[0],
         "coursename": i[1],
-        "sec": str([2]),
+        "sec": str(i[2]),
         "date": dateconverter.dateconverter(i[3]),
         "time": f"{i[4][0:2]}:{i[4][2:4]} - {i[4][4:6]}:{i[4][6:8]}",
         "room": i[5]
