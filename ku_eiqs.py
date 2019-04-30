@@ -57,7 +57,7 @@ def exam_tbl(data):
     exam = postgresql_api.get_data(query_string)
     #print("print",exam)
     for i in exam:
-        res[t[0]] = {"key": i[0], #courseid
+        res[i[0]] = {"key": i[0], #courseid
         "coursename": i[1],
         "sec": str(i[2]),
         "date": dateconverter.dateconverter(i[3]),
