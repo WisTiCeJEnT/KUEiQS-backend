@@ -52,10 +52,11 @@ def exam_tbl(data):
     SELECT course.courseid, coursename, sec, date, time, room FROM examtbl, course
     WHERE examtbl.courseid=course.courseid
     AND ("""+course+") AND mf='f' AND year=2561 AND sem=2"
+    #print(query_string)
     exam = postgresql_api.get_data(query_string)
     #print("print",exam)
     for i in exam:
-        ans.append({"courseid": i[0],
+        ans.append({"key": i[0], #courseid
         "coursename": i[1],
         "sec": str(i[2]),
         "date": dateconverter.dateconverter(i[3]),
