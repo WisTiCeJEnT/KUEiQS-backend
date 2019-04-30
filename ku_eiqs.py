@@ -7,30 +7,50 @@ import random
 import time
 
 demo_user = eval(os.environ["DEMO_USER"])
-token = {}
+admin_token = {}
+std_token = {}
 
 def check_token(uid, u_token):
-    if(uid not in token):
-        return 0
-    elif(token[uid] != u_token):
-        return 0
+    if(uid[0].lower() == 'b'):
+        if(uid not in std_token):
+            return 0
+        elif(std_token[uid] != u_token):
+            return 0
+    else:
+        if(uid not in admin_token):
+            return 0
+        elif(admin_token[uid] != u_token):
+            return 0
     return 1
 
 def gen_token(uid):
     #random.seed(time.ctime())
     new_token = str(random.randint(1000000000,9999999999))
-    global token
-    token[uid] = new_token
-    return new_token
+    global std_token
+    global admin_token
+    group = ''
+    if(uid[0].lower() == 'b'):
+        std_token[uid] = new_token
+        group = 's'
+    else:
+        admin_token[uid] = new_token
+        group = 'l'
+    return [new_token, group]
 
 def nontri_login(data):
     username = data["username"]
     password = data["password"]
     if(username in demo_user):
         if(demo_user[username] == password):
-            return {"status": "ok", "token": gen_token(username)}
+            token = gen_token(username)
+            group = token[1]
+            token = token[0]
+            return {"status": "ok", "token": token, "group": group}
     elif(nontri_authentication.ku_login(username, password)):
-        return {"status": "ok", "token": gen_token(username)}
+        token = gen_token(username)
+        group = token[1]
+        token = token[0]
+        return {"status": "ok", "token": token, "group": group}
     return {"status": "wrong password", "token": ""}
 
 def query_data(data):
