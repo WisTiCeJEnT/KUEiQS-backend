@@ -45,14 +45,15 @@ AND department.facid=faculty.facid
 
 AND stddata.stdid={uid[1:]}"""
     res = postgresql_api.get_data(query_string)
-    print(res)
+    #print(res)
+    res = res[0]
     data = {
         "stdid": res[0],
-        #"name": res[1] + ' ' + res[2],
-        #"email": res[3],
-        #"department": res[4],
-        #"faculty": res[5],
-        #"advisorid": res[6]
+        "name": res[1] + ' ' + res[2],
+        "email": res[3],
+        "department": res[4],
+        "faculty": res[5],
+        "advisorid": res[6]
     }
     return res
 
