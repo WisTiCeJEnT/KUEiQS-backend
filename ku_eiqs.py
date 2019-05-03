@@ -43,7 +43,7 @@ FROM stddata, faculty, department
 WHERE stddata.depid=department.depid
 AND department.facid=faculty.facid
 
-AND stddata.stdid={uid[]}"""
+AND stddata.stdid={uid[1:]}"""
     res = postgresql_api.get_data(query_string)
     print(res)
     data = {
@@ -78,7 +78,7 @@ def nontri_login(data):
         "status": "ok", 
         "token": token, 
         "group": group,
-        "userdada": get_user_data(username)
+        "userdata": get_user_data(username)
         }
     return {"status": "wrong password", "token": ""}
 
