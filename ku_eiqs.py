@@ -55,7 +55,7 @@ AND stddata.stdid={uid[1:]}"""
         "faculty": res[5],
         "advisorid": res[6]
     }
-    return res
+    return data
 
 def nontri_login(data):
     username = data["username"]
