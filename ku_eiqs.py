@@ -43,15 +43,16 @@ FROM stddata, faculty, department
 WHERE stddata.depid=department.depid
 AND department.facid=faculty.facid
 
-AND stddata.stdid={uid[1:]}"""
+AND stddata.stdid={uid[]}"""
     res = postgresql_api.get_data(query_string)
+    print(res)
     data = {
         "stdid": res[0],
-        "name": res[1] + ' ' + res[2],
-        "email": res[3],
-        "department": res[4],
-        "faculty": res[5],
-        "advisorid": res[6]
+        #"name": res[1] + ' ' + res[2],
+        #"email": res[3],
+        #"department": res[4],
+        #"faculty": res[5],
+        #"advisorid": res[6]
     }
     return res
 
