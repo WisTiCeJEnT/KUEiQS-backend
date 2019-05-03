@@ -37,6 +37,24 @@ def gen_token(uid):
         group = 'l'
     return [new_token, group]
 
+def get_user_data(uid):
+    query_string = f"""SELECT stdid, stdfname, stdlname, stddata.email, depname, facname, advisorid
+FROM stddata, faculty, department
+WHERE stddata.depid=department.depid
+AND department.facid=faculty.facid
+
+AND stddata.stdid={uid}"""
+    res = postgresql_api.get_data(query_string)
+    data = {
+        "stdid": res[0],
+        "name": res[1] + ' ' + res[2],
+        "email": res[3],
+        "department": res[4],
+        "faculty": res[5],
+        "advisorid": res[6]
+    }
+    return res
+
 def nontri_login(data):
     username = data["username"]
     password = data["password"]
@@ -45,12 +63,22 @@ def nontri_login(data):
             token = gen_token(username)
             group = token[1]
             token = token[0]
-            return {"status": "ok", "token": token, "group": group}
+            return {
+            "status": "ok", 
+            "token": token, 
+            "group": group, 
+            "userdata": {"name": username}
+            }
     elif(nontri_authentication.ku_login(username, password)):
         token = gen_token(username)
         group = token[1]
         token = token[0]
-        return {"status": "ok", "token": token, "group": group}
+        return {
+        "status": "ok", 
+        "token": token, 
+        "group": group,
+        "userdada": get_user_data(username)
+        }
     return {"status": "wrong password", "token": ""}
 
 def query_data(data):
@@ -68,6 +96,8 @@ def exam_tbl(data):
     tbl = data["tbl"]
     course = f"(examtbl.courseid='{tbl[0]['key']}' AND examtbl.sec={int(tbl[0]['sec'])})"
     for i in range(1,len(tbl)):
+        int(tbl[i]['key'])  #Try to error
+        int(tbl[i]['sec'])  #Try to error too
         course += f" OR (examtbl.courseid='{tbl[i]['key']}' AND examtbl.sec={int(tbl[i]['sec'])})"
     query_string = """
     SELECT course.courseid, coursename, sec, date, time, room FROM examtbl, course
