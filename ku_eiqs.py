@@ -69,7 +69,8 @@ def nontri_login(data):
             "status": "ok", 
             "token": token, 
             "group": group, 
-            "userdata": {"name": username}
+            "userdata": {"name": username}, 
+            "authentication": True
             }
     elif(nontri_authentication.ku_login(username, password)):
         token = gen_token(username)
@@ -79,9 +80,10 @@ def nontri_login(data):
         "status": "ok", 
         "token": token, 
         "group": group,
-        "userdata": get_user_data(username)
+        "userdata": get_user_data(username), 
+        "authentication": True
         }
-    return {"status": "wrong password", "token": ""}
+    return {"status": "wrong password", "token": "", "authentication": False}
 
 def query_data(data):
     username = data["username"]
