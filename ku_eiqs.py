@@ -7,7 +7,7 @@ import random
 import time
 
 STD_QUERY_LIST = ['stdenroll.sem', 'examtbl.mf', 'examtbl.year']
-ADMIN_QUERY_LIST = ['stdid', 'stdfname', 'stdlname', 'courseid', 'sec', 'sem', 'mf', 'date', 'time', 'year']
+ADMIN_QUERY_LIST = ['stddata.stdid', 'stddata.stdfname', 'stddata.stdlname', 'course.courseid', 'stdenroll.sec', 'examtbl.sem', 'examtbl.mf', 'examtbl.date', 'examtbl.time', 'examtbl.year']
 demo_user = eval(os.environ["DEMO_USER"])
 admin_token = {}
 std_token = {}
