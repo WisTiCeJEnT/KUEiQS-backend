@@ -138,6 +138,15 @@ def sort_by_date(exam_dict):
         res.append(new_exam[i])
     return res
 
+def type_query(this_query):
+    if(eval(this_query) == type(ADMIN_QUERY_LIST[0])):
+        this_query = "'"+this_query+"'"
+    elif(len(str(int(this_query))) != len(this_query)):
+        this_query = "'"+this_query+"'"
+    else:
+        this_query = int(this_query)
+    return this_query
+
 def stdQuery(data):
     if(check_token(data)):
         stdquery_data = data['query_data']
@@ -154,7 +163,7 @@ AND stdenroll.stdid="""+f"{int(data['username'][1:])} "
         for i in STD_QUERY_LIST:
             short_i = i[i.find('.')+1:]
             if short_i in stdquery_data:
-                query_string += f"AND {i}={stdquery_data[short_i]}" 
+                query_string += f"AND {i}={type_query(stdquery_data[short_i])} " 
         #print(query_string)
         exam = postgresql_api.get_data(query_string)
         res = {}
@@ -191,7 +200,8 @@ AND stddata.stdid BETWEEN startid AND endid
         for i in ADMIN_QUERY_LIST:
             short_i = i[i.find('.')+1:]
             if short_i in adminquery_data:
-                query_string += f"AND {i}={adminquery_data[short_i]}" 
+                
+                query_string += f"AND {i}={type_query(adminquery_data[short_i])} " 
         #print(query_string)
         exam = postgresql_api.get_data(query_string)
         res = {}
