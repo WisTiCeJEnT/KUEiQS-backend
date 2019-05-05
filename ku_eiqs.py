@@ -117,7 +117,7 @@ def exam_tbl(data):
     exam = postgresql_api.get_data(query_string)
     #print("print",exam)
     for i in exam:
-        res[i[0]] = {"key": i[0], #courseid
+        res[i[3]+i[4]] = {"key": i[0], #courseid
         "coursename": i[1],
         "sec": str(i[2]),
         "date": dateconverter.dateconverter(i[3]),
@@ -125,11 +125,8 @@ def exam_tbl(data):
         "time": dateconverter.timeconverter(i[4]),
         "room": i[5]
         }
-    for i in range(len(tbl)):
-        if(tbl[i]['key'] in res.keys()):
-            ans.append(res[tbl[i]['key']])
-    return(ans)
-    
+    return(sort_by_date(res))
+        
 def sort_by_date(exam_dict):
     new_exam = {}
     for k in exam_dict.keys():
@@ -158,6 +155,43 @@ AND stdenroll.stdid="""+f"{int(data['username'][1:])} "
             short_i = i[i.find('.')+1:]
             if short_i in stdquery_data:
                 query_string += f"AND {i}={stdquery_data[short_i]}" 
+        #print(query_string)
+        exam = postgresql_api.get_data(query_string)
+        res = {}
+        for i in exam:
+            res[i[3]+i[4]] = {"key": i[0], #courseid
+            "coursename": i[1],
+            "sec": str(i[2]),
+            "date": dateconverter.dateconverter(i[3]),
+            "caldate": dateconverter.caldate(i[3]),
+            "time": dateconverter.timeconverter(i[4]),
+            "room": i[5]
+            }
+        return(sort_by_date(res))
+    else:
+        return {"status": "wrong token"}
+
+def adminQuery(data):
+    if(check_token(data)):
+        adminquery_data = data['query_data']
+        query_string = """SELECT course.courseid, course.coursename, stdenroll.sec, examtbl.date, examtbl.time, examtbl.room
+FROM examtbl, course, stddata, stdenroll, faculty, department, lecdata
+WHERE examtbl.courseid=course.courseid
+AND stddata.advisorid=lecdata.lecid
+AND stddata.stdid=stdenroll.stdid
+AND stddata.depid=department.depid
+AND department.facid=faculty.facid
+AND stdenroll.courseid=course.courseid
+AND stdenroll.sec=examtbl.sec
+AND stdenroll.sem=examtbl.sem
+AND stdenroll.year=examtbl.year
+AND stddata.stdid BETWEEN startid AND endid
+
+"""
+        for i in ADMIN_QUERY_LIST:
+            short_i = i[i.find('.')+1:]
+            if short_i in adminquery_data:
+                query_string += f"AND {i}={adminquery_data[short_i]}" 
         #print(query_string)
         exam = postgresql_api.get_data(query_string)
         res = {}

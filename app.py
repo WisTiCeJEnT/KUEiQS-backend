@@ -30,6 +30,13 @@ def stdQuery():
     queried_data = ku_eiqs.stdQuery(data)
     return jsonify(queried_data)
 
+@app.route('/adminquery', methods=['GET', 'POST'])
+def adminQuery():
+    data = request.get_json()
+    print(data)
+    queried_data = ku_eiqs.adminQuery(data)
+    return jsonify(queried_data)
+
 @app.route('/getdata', methods=['GET', 'POST'])
 def getData():
     data = request.get_json()
