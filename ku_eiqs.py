@@ -100,7 +100,6 @@ def query_data(data):
     return{"status": "ok", "data": str(res)}
     
 def exam_tbl(data):
-    ans = []
     res = {}
     tbl = data["tbl"]
     int(tbl[0]['key'])
@@ -140,8 +139,6 @@ def sort_by_date(exam_dict):
 
 def type_query(this_query):
     if(type(this_query) == type(ADMIN_QUERY_LIST[0])):
-        this_query = "'"+this_query+"'"
-    elif(len(str(int(this_query))) != len(this_query)):
         this_query = "'"+this_query+"'"
     else:
         this_query = int(this_query)
