@@ -6,7 +6,7 @@ import os
 import random
 import time
 
-STD_QUERY_LIST = ['stdenroll.stdid', 'stdenroll.sem', 'examtbl.mf', 'examtbl.year']
+STD_QUERY_LIST = ['stdenroll.sem', 'examtbl.mf', 'examtbl.year']
 ADMIN_QUERY_LIST = ['stdid', 'stdfname', 'stdlname', 'courseid', 'sec', 'sem', 'mf', 'date', 'time', 'year']
 demo_user = eval(os.environ["DEMO_USER"])
 admin_token = {}
@@ -144,18 +144,21 @@ def sort_by_date(exam_dict):
 def stdQuery(data):
     if(check_token(data)):
         stdquery_data = data['query_data']
-        query_string = """SELECT course.courseid, course.coursename, stdenroll.sec, examtbl.date, examtbl.time
+        query_string = """SELECT course.courseid, course.coursename, stdenroll.sec, examtbl.date, examtbl.time, examtbl.room
 FROM examtbl, course, stdenroll
 WHERE examtbl.courseid=course.courseid
 AND stdenroll.courseid=course.courseid
 AND stdenroll.sec=examtbl.sec
 AND stdenroll.sem=examtbl.sem
 AND stdenroll.year=examtbl.year
-AND stdenroll.stdid BETWEEN startid AND endid """
+AND stdenroll.stdid BETWEEN startid AND endid 
+
+AND stdenroll.stdid="""+f"{int(data['username'][1:])} "
         for i in STD_QUERY_LIST:
             short_i = i[i.find('.')+1:]
             if short_i in stdquery_data:
                 query_string += f"AND {i}={stdquery_data[short_i]}" 
+        #print(query_string)
         exam = postgresql_api.get_data(query_string)
         res = {}
         for i in exam:
