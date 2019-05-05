@@ -144,7 +144,7 @@ def sort_by_date(exam_dict):
 def stdQuery(data):
     if(check_token(data)):
         stdquery_data = data['query_data']
-        query_string = """SELECT course.courseid, coursename, sec, date, time
+        query_string = """SELECT course.courseid, course.coursename, stdenroll.sec, examtbl.date, examtbl.time
 FROM examtbl, course, stdenroll
 WHERE examtbl.courseid=course.courseid
 AND stdenroll.courseid=course.courseid
