@@ -6,11 +6,18 @@ import os
 import random
 import time
 
+STD_QUERY_LIST = ['stddata.stdid', 'stdenroll.sem', 'examtbl.mf', 'examtbl.year']
+ADMIN_QUERY_LIST = ['stdid', 'stdfname', 'stdlname', 'courseid', 'sec', 'sem', 'mf', 'date', 'time', 'year']
 demo_user = eval(os.environ["DEMO_USER"])
 admin_token = {}
 std_token = {}
 
-def check_token(uid, u_token):
+def check_token(data):
+    try:
+        uid = data["username"]
+        u_token = data["token"]
+    except:
+        return 0
     if(uid[0].lower() == 'b'):
         if(uid not in std_token):
             return 0
@@ -86,10 +93,8 @@ def nontri_login(data):
     return {"status": "wrong password", "token": "", "authentication": False}
 
 def query_data(data):
-    username = data["username"]
-    u_token = data["token"]
     query_string = data["query_string"]#for temporary use only
-    if(not check_token(username, u_token)):
+    if(not check_token(data)):
         return {"status": "wrong token", "data": []}
     res = postgresql_api.get_data(query_string)
     return{"status": "ok", "data": str(res)}
@@ -98,6 +103,7 @@ def exam_tbl(data):
     ans = []
     res = {}
     tbl = data["tbl"]
+    int(tbl[0]['key'])
     course = f"(examtbl.courseid='{tbl[0]['key']}' AND examtbl.sec={int(tbl[0]['sec'])})"
     for i in range(1,len(tbl)):
         int(tbl[i]['key'])  #Try to error
@@ -115,8 +121,8 @@ def exam_tbl(data):
         "coursename": i[1],
         "sec": str(i[2]),
         "date": dateconverter.dateconverter(i[3]),
-        "caldate": f"{int(i[3][4:8])-543}-{i[3][2:4]}-{i[3][0:2]}",
-        "time": f"{i[4][0:2]}:{i[4][2:4]} - {i[4][4:6]}:{i[4][6:8]}",
+        "caldate": dateconverter.caldate(i[3]),
+        "time": dateconverter.timeconverter(i[4]),
         "room": i[5]
         }
     for i in range(len(tbl)):
@@ -124,6 +130,47 @@ def exam_tbl(data):
             ans.append(res[tbl[i]['key']])
     return(ans)
     
+def sort_by_date(exam_dict):
+    new_exam = {}
+    for k in exam_dict.keys():
+        new_key = k[4:6]+k[2:4]+k[0:2]+k[6:]
+        new_exam[new_key] = exam_dict[k]
+    sorted_list = sorted(new_exam.keys())
+    res = []
+    for i in sorted_list:
+        res.append(new_exam[i])
+    return res
+
+def stdQuery(data):
+    if(check_token(data)):
+        stdquery_data = data['query_data']
+        query_string = """SELECT course.courseid, coursename, sec, date, time
+FROM examtbl, course, stdenroll
+WHERE examtbl.courseid=course.courseid
+AND stdenroll.courseid=course.courseid
+AND stdenroll.sec=examtbl.sec
+AND stdenroll.sem=examtbl.sem
+AND stdenroll.year=examtbl.year
+AND stdenroll.stdid BETWEEN startid AND endid"""
+        for i in STD_QUERY_LIST:
+            short_i = i[i.find('.')+1:]
+            if short_i in stdquery_data:
+                query_string += f"AND {i}={stdquery_data[short_i]}" 
+        exam = postgresql_api.get_data(query_string)
+        res = {}
+        for i in exam:
+            res[i[3]+i[4]] = {"key": i[0], #courseid
+            "coursename": i[1],
+            "sec": str(i[2]),
+            "date": dateconverter.dateconverter(i[3]),
+            "caldate": dateconverter.caldate(i[3]),
+            "time": dateconverter.timeconverter(i[4]),
+            "room": i[5]
+            }
+        return(sort_by_date(res))
+    else:
+        return {"status": "wrong token"}
+
 #SELECT course.courseid, coursename, sec, date, time, room FROM examtbl, course
 #WHERE examtbl.courseid=course.courseid
 #AND ((examtbl.courseid='01204351' AND examtbl.sec=1) OR (examtbl.courseid='01204225' AND examtbl.sec=1))
