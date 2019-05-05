@@ -139,7 +139,7 @@ def sort_by_date(exam_dict):
     return res
 
 def type_query(this_query):
-    if(type(eval(this_query)) == type(ADMIN_QUERY_LIST[0])):
+    if(type(this_query) == type(ADMIN_QUERY_LIST[0])):
         this_query = "'"+this_query+"'"
     elif(len(str(int(this_query))) != len(this_query)):
         this_query = "'"+this_query+"'"
