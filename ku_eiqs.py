@@ -8,6 +8,7 @@ import time
 
 STD_QUERY_LIST = ['stdenroll.sem', 'examtbl.mf', 'examtbl.year']
 ADMIN_QUERY_LIST = ['stddata.stdid', 'stddata.stdfname', 'stddata.stdlname', 'course.courseid', 'stdenroll.sec', 'examtbl.sem', 'examtbl.mf', 'examtbl.date', 'examtbl.time', 'examtbl.year']
+STRING_QUERY_LIST = ['stdfname', 'stdlname', 'courseid', 'coursename', 'mf', 'date', 'time', 'room']
 demo_user = eval(os.environ["DEMO_USER"])
 admin_token = {}
 std_token = {}
@@ -137,8 +138,8 @@ def sort_by_date(exam_dict):
         res.append(new_exam[i])
     return res
 
-def type_query(this_query):
-    if(type(this_query) == type(ADMIN_QUERY_LIST[0])):
+def type_query(this_query, query_var):
+    if(query_var in STRING_QUERY_LIST.keys()):
         this_query = "'"+this_query+"'"
     else:
         this_query = int(this_query)
@@ -159,8 +160,8 @@ AND stdenroll.stdid BETWEEN startid AND endid
 AND stdenroll.stdid="""+f"{int(data['username'][1:])} "
         for i in STD_QUERY_LIST:
             short_i = i[i.find('.')+1:]
-            if short_i in stdquery_data:
-                query_string += f"AND {i}={type_query(stdquery_data[short_i])} " 
+            if stdquery_data[short_i] != '':
+                query_string += f"AND {i}={type_query(stdquery_data[short_i], short_i)} " 
         #print(query_string)
         exam = postgresql_api.get_data(query_string)
         res = {}
@@ -196,9 +197,9 @@ AND stddata.stdid BETWEEN startid AND endid
 """
         for i in ADMIN_QUERY_LIST:
             short_i = i[i.find('.')+1:]
-            if short_i in adminquery_data:
+            if adminquery_data[short_i] != '':
                 
-                query_string += f"AND {i}={type_query(adminquery_data[short_i])} " 
+                query_string += f"AND {i}={type_query(adminquery_data[short_i], short_i)} " 
         #print(query_string)
         exam = postgresql_api.get_data(query_string)
         res = {}
