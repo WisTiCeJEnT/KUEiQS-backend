@@ -55,21 +55,33 @@ AND stddata.stdid={uid[1:]}"""
     res = postgresql_api.get_data(query_string)
     #print(res)
     res = res[0]
-    data = {
-        "stdid": res[0],
-        "name": res[1] + ' ' + res[2],
-        "email": res[3],
-        "department": res[4],
-        "faculty": res[5],
-        "advisorid": res[6]
-    }
+    if(len(res)==7):
+        data = {
+            "uid": uid,
+            "stdid": res[0],
+            "name": res[1] + ' ' + res[2],
+            "email": res[3],
+            "department": res[4],
+            "faculty": res[5],
+            "advisorid": res[6]
+        }
+    else:
+        data = {
+            "uid": uid,
+            "stdid": uid[1:],
+            "name": "Unregisted User",
+            "email": "Unknow",
+            "department": "Unknow",
+            "faculty": "Unknow",
+            "advisorid": "Unknow"
+        }
     return data
 
 def nontri_login(data):
     username = data["username"]
     password = data["password"]
     if(username in demo_user):
-        if(demo_user[username] == password):
+        if(demo_user[username]["password"] == password):
             token = gen_token(username)
             group = token[1]
             token = token[0]
@@ -77,7 +89,15 @@ def nontri_login(data):
             "status": "ok", 
             "token": token, 
             "group": group, 
-            "userdata": {"name": username}, 
+            "userdata": {
+                "uid": username,
+                "stdid": "-",
+                "name": demo_user[username]["name"],
+                "email": demo_user[username]["email"],
+                "department": demo_user[username]["department"],
+                "faculty": demo_user[username]["faculty"],
+                "advisorid": "-"
+            }, 
             "authentication": True
             }
     elif(nontri_authentication.ku_login(username, password)):
