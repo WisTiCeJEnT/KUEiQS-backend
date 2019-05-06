@@ -139,7 +139,7 @@ def sort_by_date(exam_dict):
     return res
 
 def type_query(this_query, query_var):
-    if(query_var in STRING_QUERY_LIST:
+    if(query_var in STRING_QUERY_LIST):
         this_query = "'"+this_query+"'"
     else:
         this_query = int(this_query)
