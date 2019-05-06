@@ -136,7 +136,7 @@ def sort_by_date(exam_dict):
     res = []
     for i in sorted_list:
         res.append(new_exam[i])
-    return res
+    return {"tbl": res, "status": "sorted by date"}
 
 def type_query(this_query, query_var):
     if(query_var in STRING_QUERY_LIST):
