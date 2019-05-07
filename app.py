@@ -21,7 +21,7 @@ def examTbl():
     data = request.get_json()
     print(data)
     tbl = ku_eiqs.exam_tbl(data)
-    return jsonify({"status": "ok", "tbl": tbl})
+    return jsonify(tbl)
 
 @app.route('/stdquery', methods=['GET', 'POST'])
 def stdQuery():
